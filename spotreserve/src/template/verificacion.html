@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Verificación</title>
+</head>
+<body>
+    <h2>Hemos enviado un código de verificación a tu correo {{ email }}. Por favor verifica e introdúcelo en el campo</h2>
+    <form method="POST" action="{{ url_for('verificar') }}">
+        <input type="text" name="verification_code" placeholder="Código de verificación" required>
+        <button type="submit">Verificar</button>
+    </form>
+    {% if mensaje %}
+        <p>{{ mensaje }}</p>
+    {% endif %}
+    <form method="GET" action="{{ url_for('reenviar_codigo') }}">
+        <button type="submit" id="resend_button" disabled>Reenviar Código</button>
+    </form>
+    <script>
+        var resendButton = document.getElementById('resend_button');
+        var timer = 60;
+        var interval = setInterval(function() {
+            if (timer > 0) {
+                timer--;
+                resendButton.innerHTML = 'Reenviar Código (' + timer + 's)';
+            } else {
+                resendButton.disabled = false;
+                resendButton.innerHTML = 'Reenviar Código';
+                clearInterval(interval);
+            }
+        }, 1000);
+    </script>
+</body>
+</html>
