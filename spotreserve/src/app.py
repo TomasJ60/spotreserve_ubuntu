@@ -367,6 +367,11 @@ def enviar_correo_verificacion(email, codigo):
 
 @app.route('/listar', methods=["GET", "POST"])
 def listar_usuarios():
+    if 'logueado' not in session:
+        return redirect(url_for('login'))
+    elif session.get('id_rol') != 1:
+        return redirect(url_for('home'))
+
     conn = get_db_connection()
     cur = conn.cursor()
     cur.execute("SELECT * FROM reserva")
@@ -462,6 +467,11 @@ def enviar_correo_confirmacion_reserva(email_usuario):
 
 @app.route('/obtener_bares', methods=["GET"])
 def obtener_bares():
+    if 'logueado' not in session:
+        return redirect(url_for('login'))
+    elif session.get('id_rol') != 2:
+        return redirect(url_for('home'))
+
     # Inicializar una lista para almacenar los nombres de los bares
     nombres_bares = []
 
@@ -479,8 +489,6 @@ def obtener_bares():
 
     # Renderizar la plantilla con los nombres de los bares
     return render_template("reserva.html", nombres_bares=nombres_bares)
-
-
 
 #botones
 
@@ -648,7 +656,6 @@ def listar_bares():
     conn.close()
 
     return render_template("bares.html", bares=bares_con_diccionarios)
-
 
 @app.route('/mapa/<int:bar_id>')
 def mostrar_mapa(bar_id):
