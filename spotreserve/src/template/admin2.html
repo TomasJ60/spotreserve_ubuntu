@@ -66,7 +66,7 @@
                 {% if usuarios %}
                 {% for reserva in usuarios %}
                     <li class="reserva-item">
-                        <strong>Restaurante:</strong> {{ reserva['nombreLocal'] }}<br>
+                        <strong>Bar:</strong> {{ reserva['nombreLocal'] }}<br>
                         <strong>Fecha de reserva:</strong> {{ reserva['fecha_reserva'] }}<br>
                         <strong>Hora de reserva:</strong> {{ reserva['hora_reserva'] }}<br>
                         <button class="btn-verde" onclick="aceptarReserva('{{ reserva.id_reserva }}', '{{ reserva.nombreLocal }}')">Confirmar</button>

@@ -24,7 +24,7 @@
         <button onclick="getCurrentLocation()">Usar Ubicación Actual</button>
         <br>
         <b>Destino:</b>
-        <input type="text" id="end" value="{{ bar['direccion'] }}" placeholder="Escribe el destino">
+        <input type="text" id="end" value="{{ direccion }}" placeholder="Escribe el destino">
         <br>
         <input type="submit" id="submit" value="Calcular Ruta">
     </div>
@@ -35,7 +35,7 @@
             const directionsService = new google.maps.DirectionsService();
             const directionsRenderer = new google.maps.DirectionsRenderer();
             const map = new google.maps.Map(document.getElementById("map"), {
-                zoom: 6,
+                zoom: 14,
                 center: { lat: 4.60971, lng: -74.08175 }, // Centro de Bogotá, Colombia.
             });
 
@@ -53,6 +53,22 @@
                 types: ['geocode'], // Solo permitir autocompletar direcciones
                 componentRestrictions: { country: 'CO' } // Restringir a Colombia
             });
+
+            // Si la dirección del destino está disponible, marcarla en el mapa
+            if (endInput.value) {
+                const geocoder = new google.maps.Geocoder();
+                geocoder.geocode({ 'address': endInput.value }, (results, status) => {
+                    if (status === 'OK') {
+                        map.setCenter(results[0].geometry.location);
+                        new google.maps.Marker({
+                            map: map,
+                            position: results[0].geometry.location
+                        });
+                    } else {
+                        console.error('Geocode was not successful for the following reason: ' + status);
+                    }
+                });
+            }
 
             document.getElementById("submit").addEventListener("click", () => {
                 calculateAndDisplayRoute(directionsService, directionsRenderer);
@@ -113,7 +129,7 @@
                         summaryPanel.innerHTML += route.legs[i].distance.text + "<br><br>";
                     }
                 })
-                .catch((e) => window.alert("Error en la solicitud de direcciones debido a " + status));
+                .catch((e) => window.alert("Error en la solicitud de direcciones debido a " + e));
         }
 
         window.initMap = initMap;
@@ -123,3 +139,4 @@
     </script>
 </body>
 </html>
+
